@@ -1,0 +1,78 @@
+XCOMM ########################################################################
+XCOMM
+XCOMM This is the Imake file for Appliance-API/includes
+XCOMM
+XCOMM Change log entries
+XCOMM Bug#       Date    Who Description
+XCOMM ---------  ------- --- ------------------------------------------------------
+XCOMM 19990      15Aug14 SAB	Alphabetize included files for readability
+XCOMM 20145      15Aug14 SAB Add file for dashboard summary
+XCOMM 20180      21Aug14 ADS Added file to keep track of constants
+XCOMM 20151      12Sep14 SAB Added file for authentication
+XCOMM 20428      23Sep14 SAB Added files for preferences
+XCOMM UNIBP-267  02Oct14 ADS Added file for inventory
+XCOMM UNIBP-237  06Oct14 MSG Added files for license and updates
+XCOMM UNIPB-487  14Oct14 JTG Added file for credentials
+XCOMM UNIBP-515  15Oct14 JTG Added file for archiving
+XCOMM UNIBP-559  22Oct14 MSG Added files for date-time and mail-config
+XCOMM UVB-145    27Oct14 ASM Added file for virtual-clients
+XCOMM UVB-306    05Nov14 MMB Added file for systems resource
+XCOMM UVB-456    18Nov14 ASM Added file for encryption
+XCOMM UNIBP-699  17Nov14 MSG Added file for replication
+XCOMM UVB-19     02Dec14 LMC Added file for csv generation
+XCOMM UVB-162    26Nov14 ASM Added file for restores
+XCOMM UVB-366    02Dec14 ADS	Created a reports folder for readability
+XCOMM UVB-495    09Dec14 SAB Added file for hostname
+XCOMM UVB-412    15Dec14 SAB Added file for feedback
+XCOMM UVB-413    15Dec14 SAB Added file for commands
+XCOMM UNIBP-1054 04Feb15 MSG Added file for capabilities
+XCOMM UNIBP-1290 05Feb15 ASM Added file for forums
+XCOMM UNIBP-2366 14Mar15 LMC Added file for forum curl calls
+XCOMM UNIBP-3018 17Apr15 SAB Added file for combined catalog
+XCOMM UNIBP-2786 24Apr15 ASM Added file for GFS Retention
+XCOMM UNIBP-524  23Jun15 MSG Added file for protected assets
+XCOMM UNIBP-6932 09Sep15 ASM Added file for applications
+XCOMM UNIBP-8326 07Jan16 PAL Added file for RDR certification
+XCOMM UNIBP-9316 26Feb16 LMC Added file for settings (master.ini)
+XCOMM UNIBP-9476 04Mar16 LMC Added file for ports
+XCOMM UNIBP-99-9 23Mar16 LMC Added file for navigational groups
+XCOMM UNIBP-     27May16 ADS Added file for quiesce settings and re-alphabetized for readability
+XCOMM UNIBP-10767 3Jun16 SAB Added file for optimizer
+XCOMM UNIBP-10844 7Jun16 SAB Added file for DR Test
+XCOMM UNIBP-13563 26Jan17 LMC Added file for Roles-Based Access
+XCOMM UNIBP-13870 20Mar17 LMC Added file for SLA Policies
+XCOMM UNIBP-14467 11Apr17 ASM Added file for Replicas
+
+XCOMM
+XCOMM ########################################################################
+
+#include <header.def>
+#include <bp/bpimk.tmpl>
+
+INCLUDE_DIR= appliance-api.dir/html/api/includes
+
+XCOMM## Files to install
+INCLUDE_FILES= activedirectory.php alerts.php api.lib.php appliance.php applications.php archive.php \
+  audit-history.php authenticate.php backup-files.php backups.php bp.php capabilities.php catalogs.php clients.php \
+  commands.php configuration.php constants.lib.php credentials.php csv.php date-time.php drtest.php \
+  encryption.php error_codes.lib.php feedback.php forum.php forumweb.php function.lib.php \
+  hostname.php hosts.php hypervisor.php inventory.php jobs.php license.php logger.php \
+  mail-config.php navgroups.php networks.php notifications.php optimize.php ports.php preferences.php \
+  protected_assets.php psa.php quiesce.php rdr.php replication.php reports.php restore.php retention.php roles.php replicas.php \
+  schedules.php settings.php sla.php snmp-config.php storage.php summary.php systems.php \
+  uiadvisor.php updates.php users.php virtual-clients.php \
+
+SUBDIRS= reports jobs
+
+InstallMultipleDestFlags(install,$(INCLUDE_FILES),$(INCLUDE_DIR), -m 0644)
+
+MakeMakeSubdirs($(SUBDIRS),Makefiles)
+NamedTargetSubdirs(install,$(SUBDIRS),Installing,DESTDIR=$(DESTDIR),install)
+
+clean::
+	@(set -x; cd $(DESTDIR)$(INCLUDE_DIR) && RemoveFiles($(INCLUDE_FILES)) ; )
+	for i in $(SUBDIRS);\  @@\
+	do \  @@\
+	(cd $$i ; echo "Cleaning" "in $(CURRENT_DIR)/$$i..."; \  @@\
+	$(MAKE) $(MFLAGS) "clean"); \  @@\
+	done
